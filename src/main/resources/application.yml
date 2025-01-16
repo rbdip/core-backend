@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: core-backend
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+app:
+  path:
+    start-prefix: /api/v1
