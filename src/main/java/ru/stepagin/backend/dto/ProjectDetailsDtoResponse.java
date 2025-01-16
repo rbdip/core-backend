@@ -16,18 +16,19 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProjectDetailsDtoResponse {
     private Long id;
-    private String projectTitle;
-    private String projectName;
+    private String title;
+    private String name;
     private String authorUsername;
     private String authorDisplayName;
     private LocalDate createdOn;
 
-    private LocalDate updatedOIn;
+    private LocalDate updatedOn;
     private String description;
     private String displayVersion;
     private List<projectVersionDto> versions;
 
-    static class projectVersionDto {
+    @AllArgsConstructor
+    public static class projectVersionDto {
         private Long id;
         private String displayName;
         private Integer displayOrder;

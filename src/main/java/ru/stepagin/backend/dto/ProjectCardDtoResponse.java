@@ -15,9 +15,9 @@ import java.time.LocalDate;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProjectCardDtoResponse {
     private Long id;
-    private String projectTitle;
-    private String projectName;
-    private String authorUsername;
+    private String title;
+    private String name;
+    private String author;
     private String authorDisplayName;
     private LocalDate createdOn;
 }

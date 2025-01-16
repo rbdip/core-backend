@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.entity.UserEntity;
@@ -11,8 +12,11 @@ import ru.stepagin.backend.repository.ProjectCardRepository;
 import ru.stepagin.backend.repository.ProjectVersionRepository;
 import ru.stepagin.backend.repository.UserRepository;
 
+import java.util.List;
+
 @Slf4j
 @Service
+@Validated
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectCardRepository projectCardRepository;
@@ -50,4 +54,19 @@ public class ProjectService {
         projectCard.setAuthor(user);
         return projectCardRepository.save(projectCard);
     }
+
+    public List<ProjectCardEntity> getAllProjects() {
+        return projectCardRepository.findAll();
+    }
+
+    public ProjectVersionEntity getProject(String author, String projectName, String version) {
+        // todo: assertions
+        ProjectVersionEntity project = projectVersionRepository.findProjectByVersion(author, projectName, version);
+        if (project == null) {
+            project = projectVersionRepository.findProject(author, projectName);
+        }
+        return project;
+    }
+
+
 }
