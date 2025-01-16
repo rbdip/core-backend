@@ -1,5 +1,6 @@
 package ru.stepagin.backend.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,4 +11,8 @@ import ru.stepagin.backend.repository.UserRepository;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+
+    @PostConstruct
+    public void init() {
+    }
 }
