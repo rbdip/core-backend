@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.stepagin.backend.dto.CreateAccountDtoRequest;
+import ru.stepagin.backend.dto.UpdateUserDtoRequest;
 import ru.stepagin.backend.entity.UserEntity;
 import ru.stepagin.backend.repository.UserRepository;
 
@@ -45,5 +46,26 @@ public class UserService {
     public void login(UserEntity user) {
         user.setLastLoginOn(LocalDateTime.now());
         userRepository.save(user);
+    }
+
+    @Transactional
+    public UserEntity updateUserData(
+            String userToUpdate,
+            @Validated UpdateUserDtoRequest request
+    ) {
+        UserEntity user = getByUsername(userToUpdate);
+        if (request.getDisplayName() == null
+                && request.getPassword() == null) {
+            throw new IllegalArgumentException("At least one parameter required");
+        }
+
+        if (request.getDisplayName() != null) {
+            user.setDisplayName(request.getDisplayName());
+        }
+        if (request.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+        user.setUpdatedOn(LocalDateTime.now());
+        return userRepository.save(user);
     }
 }

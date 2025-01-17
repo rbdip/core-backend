@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.stepagin.backend.dto.UpdateUserDtoRequest;
 import ru.stepagin.backend.dto.UserCardDtoResponse;
 import ru.stepagin.backend.entity.UserEntity;
 import ru.stepagin.backend.mapper.UserMapper;
@@ -40,5 +41,19 @@ public class UserController {
         }
         userService.deleteUser(userToDelete);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{username}")
+    public ResponseEntity<UserCardDtoResponse> updateUser(
+            @PathVariable(name = "username") String userToUpdate,
+            @RequestBody UpdateUserDtoRequest request,
+            Principal principal
+    ) {
+        String actorName = principal.getName();
+        if (!actorName.equals(userToUpdate)) {
+            throw new IllegalArgumentException("cannot update other users");
+        }
+        UserEntity updated = userService.updateUserData(userToUpdate, request);
+        return ResponseEntity.ok(UserMapper.toCard(updated));
     }
 }

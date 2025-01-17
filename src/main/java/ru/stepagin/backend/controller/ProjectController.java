@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.stepagin.backend.dto.CreateProjectDtoRequest;
 import ru.stepagin.backend.dto.ProjectCardDtoResponse;
 import ru.stepagin.backend.dto.ProjectDetailsDtoResponse;
+import ru.stepagin.backend.dto.UpdateProjectDtoRequest;
 import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.mapper.ProjectMapper;
@@ -60,5 +61,21 @@ public class ProjectController {
         }
         projectService.deleteProject(author, projectName);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{author}/{name}")
+    public ResponseEntity<ProjectDetailsDtoResponse> updateProject(
+            @RequestBody UpdateProjectDtoRequest request,
+            @PathVariable(name = "author") String author,
+            @PathVariable(name = "name") String projectName,
+            @RequestParam(name = "version", required = false) String version,
+            Principal principal
+    ) {
+        String username = principal.getName();
+        if (!author.equals(username)) {
+            throw new IllegalArgumentException("can delete only your own projects");
+        }
+        ProjectVersionEntity updated = projectService.updateProjectData(request, author, projectName, version);
+        return ResponseEntity.ok(ProjectMapper.toDto(updated));
     }
 }
