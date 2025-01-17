@@ -90,7 +90,7 @@ public class ProjectService {
     ) {
         UserEntity author = userRepository.findByUsername(username); // todo: получение из авторизации
         if (author == null) {
-            author = createUserEntity(username);
+            throw new IllegalArgumentException("Username not found");
         }
 
         ProjectCardEntity card = new ProjectCardEntity();

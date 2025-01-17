@@ -12,6 +12,7 @@ import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.mapper.ProjectMapper;
 import ru.stepagin.backend.service.ProjectService;
 
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -39,9 +40,11 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectDetailsDtoResponse> createProject(
-            @RequestBody CreateProjectDtoRequest request
+            @RequestBody CreateProjectDtoRequest request,
+            Principal principal
     ) {
-        ProjectVersionEntity project = projectService.createProject(request, "admin");
+        String username = principal.getName();
+        ProjectVersionEntity project = projectService.createProject(request, username);
         return ResponseEntity.ok(ProjectMapper.toDto(project));
     }
 
