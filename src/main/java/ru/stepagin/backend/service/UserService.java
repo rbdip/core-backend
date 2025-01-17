@@ -1,5 +1,6 @@
 package ru.stepagin.backend.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import ru.stepagin.backend.repository.UserRepository;
 import java.time.LocalDateTime;
 
 @Slf4j
+@Validated
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -25,7 +27,7 @@ public class UserService {
     }
 
     public UserEntity create(
-            @Validated CreateAccountDtoRequest request
+            @Valid CreateAccountDtoRequest request
     ) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new IllegalArgumentException("Username already taken");
@@ -51,7 +53,7 @@ public class UserService {
     @Transactional
     public UserEntity updateUserData(
             String userToUpdate,
-            @Validated UpdateUserDtoRequest request
+            @Valid UpdateUserDtoRequest request
     ) {
         UserEntity user = getByUsername(userToUpdate);
         if (request.getDisplayName() == null

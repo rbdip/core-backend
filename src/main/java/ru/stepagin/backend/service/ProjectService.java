@@ -1,6 +1,7 @@
 package ru.stepagin.backend.service;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
+@Validated
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -27,7 +29,7 @@ public class ProjectService {
     private final ProjectVersionRepository projectVersionRepository;
 
     private static ProjectVersionEntity createProjectVersionEntity(
-            @Validated CreateProjectDtoRequest createRequest,
+            @Valid CreateProjectDtoRequest createRequest,
             ProjectCardEntity card
     ) {
         ProjectVersionEntity project = new ProjectVersionEntity();
@@ -90,7 +92,7 @@ public class ProjectService {
     }
 
     public ProjectVersionEntity createProject(
-            @Validated CreateProjectDtoRequest createRequest,
+            @Valid CreateProjectDtoRequest createRequest,
             String username
     ) {
         UserEntity author = userRepository.findByUsername(username); // todo: получение из авторизации
@@ -121,7 +123,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectVersionEntity updateProjectData(
-            @Validated UpdateProjectDtoRequest request,
+            @Valid UpdateProjectDtoRequest request,
             String author,
             String projectName,
             String version

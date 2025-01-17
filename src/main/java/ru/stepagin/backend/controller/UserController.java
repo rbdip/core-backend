@@ -13,6 +13,7 @@ import ru.stepagin.backend.service.UserService;
 import java.security.Principal;
 
 @Slf4j
+@CrossOrigin("*")
 @RestController
 @RequestMapping("${app.path.start-prefix}/users")
 @RequiredArgsConstructor

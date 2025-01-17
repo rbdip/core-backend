@@ -17,6 +17,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin(value = "${app.cors.ulrs}")
 @RestController
 @RequestMapping("${app.path.start-prefix}/projects")
 @RequiredArgsConstructor

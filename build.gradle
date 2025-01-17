@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'ru.stepagin'
-version = '0.0.1'
+version = '0.0.4'
 
 java {
     toolchain {
@@ -29,8 +29,8 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.7.5'
 //    implementation 'org.mapstruct:mapstruct:1.6.3'
 //    annotationProcessor  'org.mapstruct:mapstruct-processor:1.6.3'
-    implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.4.1'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.1'
 
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
