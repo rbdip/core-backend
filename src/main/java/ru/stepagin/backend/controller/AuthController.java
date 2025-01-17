@@ -40,7 +40,7 @@ public class AuthController {
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-
+        userService.login(user);
         return ResponseEntity.ok(UserMapper.toCard(user));
     }
 }

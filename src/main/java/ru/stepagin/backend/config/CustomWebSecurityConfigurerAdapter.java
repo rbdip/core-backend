@@ -28,6 +28,7 @@ public class CustomWebSecurityConfigurerAdapter {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                                 .requestMatchers(HttpMethod.POST, prefix + "/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.GET, prefix + "/projects/").permitAll()
                                 .requestMatchers(HttpMethod.GET, prefix + "/projects/*/*").permitAll()
                                 .requestMatchers(HttpMethod.GET, prefix + "/users/*").permitAll()
                         .anyRequest().authenticated()

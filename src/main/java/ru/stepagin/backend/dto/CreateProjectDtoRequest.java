@@ -29,6 +29,7 @@ public class CreateProjectDtoRequest {
     @NotNull
     private String description;
 
+    @Pattern(regexp = "[a-zA-Z\\-_0-9.]")
     private String displayVersion;
 
     private Integer displayOrder;

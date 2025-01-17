@@ -48,5 +48,17 @@ public class ProjectController {
         return ResponseEntity.ok(ProjectMapper.toDto(project));
     }
 
-
+    @DeleteMapping("/{author}/{name}")
+    public ResponseEntity<ProjectDetailsDtoResponse> deleteProject(
+            @PathVariable(name = "author") String author,
+            @PathVariable(name = "name") String projectName,
+            Principal principal
+    ) {
+        String username = principal.getName();
+        if (!author.equals(username)) {
+            throw new IllegalArgumentException("can delete only your own projects");
+        }
+        projectService.deleteProject(author, projectName);
+        return ResponseEntity.noContent().build();
+    }
 }

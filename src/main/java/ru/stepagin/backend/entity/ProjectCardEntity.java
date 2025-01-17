@@ -13,7 +13,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "project_card")
+@Table(
+        name = "project_card",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"account_id", "name", "deleted_on"})
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,6 +28,7 @@ import java.util.Set;
 public class ProjectCardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
 
     @Column(nullable = false)

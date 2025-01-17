@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.stepagin.backend.dto.CreateProjectDtoRequest;
 import ru.stepagin.backend.entity.ProjectCardEntity;
@@ -93,6 +94,10 @@ public class ProjectService {
             throw new IllegalArgumentException("Username not found");
         }
 
+        if (projectCardRepository.existsProjectByNameAndAuthor(createRequest.getName(), username)) {
+            throw new IllegalArgumentException("Project already exists");
+        }
+
         ProjectCardEntity card = new ProjectCardEntity();
         card.setName(createRequest.getName());
         card.setTitle(createRequest.getTitle());
@@ -102,5 +107,11 @@ public class ProjectService {
         card.addProjectVersion(project);
 
         return projectVersionRepository.save(project);
+    }
+
+    @Transactional
+    public void deleteProject(String author, String projectName) {
+        projectVersionRepository.deleteAllByAuthorAndName(author, projectName);
+        projectCardRepository.deleteAllByAuthorAndName(author, projectName);
     }
 }
