@@ -11,6 +11,7 @@ import ru.stepagin.backend.dto.UpdateProjectDtoRequest;
 import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.entity.UserEntity;
+import ru.stepagin.backend.exception.EntityNotFoundException;
 import ru.stepagin.backend.repository.ProjectCardRepository;
 import ru.stepagin.backend.repository.ProjectVersionRepository;
 import ru.stepagin.backend.repository.UserRepository;
@@ -55,6 +56,9 @@ public class ProjectService {
         if (project == null) {
             project = projectVersionRepository.findProject(author, projectName);
         }
+        if (project == null) {
+            throw new EntityNotFoundException("Project " + author + "/" + projectName + " not found");
+        }
         return project;
     }
 
@@ -64,7 +68,7 @@ public class ProjectService {
     ) {
         UserEntity author = userRepository.findByUsername(username); // todo: получение из авторизации
         if (author == null) {
-            throw new IllegalArgumentException("Username not found");
+            throw new EntityNotFoundException("Username not found");
         }
 
         if (projectCardRepository.existsProjectByNameAndAuthor(createRequest.getName(), username)) {
@@ -84,6 +88,10 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(String author, String projectName) {
+        ProjectVersionEntity project = projectVersionRepository.findProject(author, projectName);
+        if (project == null) {
+            throw new EntityNotFoundException("Project not found");
+        }
         projectVersionRepository.deleteAllByAuthorAndName(author, projectName);
         projectCardRepository.deleteAllByAuthorAndName(author, projectName);
     }
@@ -98,13 +106,13 @@ public class ProjectService {
         ProjectVersionEntity project;
         project = projectVersionRepository.findProject(author, projectName);
         if (project == null) {
-            throw new IllegalArgumentException("Project not found");
+            throw new EntityNotFoundException("Project not found");
         }
         if (version != null && !version.isEmpty()) {
             project = projectVersionRepository.findProjectByVersion(author, projectName, version);
         }
         if (project == null) {
-            throw new IllegalArgumentException("Project version '" + version + "' not found");
+            throw new EntityNotFoundException("Project version '" + version + "' not found");
         }
         if (request.getTitle() == null
                 && request.getProjectName() == null

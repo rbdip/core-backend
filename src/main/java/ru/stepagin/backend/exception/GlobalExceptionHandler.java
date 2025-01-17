@@ -14,6 +14,30 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler({
+            EntityNotFoundException.class
+    })
+    public ResponseEntity<CustomProblemDetail> handleNotFound(RuntimeException ex) {
+        CustomProblemDetail problemDetail = new CustomProblemDetail(
+                HttpStatus.NOT_FOUND,
+                "Not found",
+                ex.getMessage()
+        );
+        return ResponseEntity.status(404).body(problemDetail);
+    }
+
+    @ExceptionHandler({
+            IllegalArgumentException.class
+    })
+    public ResponseEntity<CustomProblemDetail> handleBadRequest(RuntimeException ex) {
+        CustomProblemDetail problemDetail = new CustomProblemDetail(
+                HttpStatus.BAD_REQUEST,
+                "Validation failed for the request",
+                ex.getMessage()
+        );
+        return ResponseEntity.badRequest().body(problemDetail);
+    }
+
     // Обработка ошибок валидации (MethodArgumentNotValidException)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomProblemDetail> handleValidationExceptions(MethodArgumentNotValidException ex, WebRequest request) {
@@ -32,7 +56,7 @@ public class GlobalExceptionHandler {
 
     // Обработка ConstraintViolationException
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<CustomProblemDetail> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
+    public ResponseEntity<CustomProblemDetail> handleConstraintViolationException(ConstraintViolationException ex) {
         CustomProblemDetail problemDetail = new CustomProblemDetail(
                 HttpStatus.BAD_REQUEST,
                 "Constraint violation",
@@ -44,7 +68,7 @@ public class GlobalExceptionHandler {
 
     // Обработка ValidationException
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<CustomProblemDetail> handleValidationException(ValidationException ex, WebRequest request) {
+    public ResponseEntity<CustomProblemDetail> handleValidationException(ValidationException ex) {
         CustomProblemDetail problemDetail = new CustomProblemDetail(
                 HttpStatus.BAD_REQUEST,
                 "Validation error",
@@ -56,7 +80,7 @@ public class GlobalExceptionHandler {
 
     // Обработка RuntimeException
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<CustomProblemDetail> handleRuntimeException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<CustomProblemDetail> handleRuntimeException(RuntimeException ex) {
         CustomProblemDetail problemDetail = new CustomProblemDetail(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "An unexpected error occurred",
@@ -68,7 +92,7 @@ public class GlobalExceptionHandler {
 
     // Обработка общего Exception
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<CustomProblemDetail> handleException(Exception ex, WebRequest request) {
+    public ResponseEntity<CustomProblemDetail> handleException(Exception ex) {
         CustomProblemDetail problemDetail = new CustomProblemDetail(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "An error occurred",

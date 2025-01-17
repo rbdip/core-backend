@@ -32,26 +32,22 @@ public class CustomWebSecurityConfigurerAdapter {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                                 .requestMatchers(HttpMethod.POST, prefix + "/auth/register").permitAll()
-                                .requestMatchers(HttpMethod.GET, prefix + "/projects/").permitAll()
+                        .requestMatchers(HttpMethod.GET, prefix + "/projects").permitAll()
                                 .requestMatchers(HttpMethod.GET, prefix + "/projects/*/*").permitAll()
                                 .requestMatchers(HttpMethod.GET, prefix + "/users/*").permitAll()
                         .anyRequest().authenticated()
-//                        .anyRequest().permitAll()
                 )
                 .formLogin(f -> f
-//                        .loginPage(prefix + "/auth/login")
-//                        .loginPage("/login")
-//                        .permitAll()
-                                .loginProcessingUrl("/api/v1/auth/login")
-//                        .failureForwardUrl("/login")
+                        .permitAll()
+                        .loginProcessingUrl(prefix + "/auth/login")
                 )
                 .logout(l -> l
-//                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/login")
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
                         .logoutUrl("/api/v1/auth/logout")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID"))
-
+                        .deleteCookies("JSESSIONID")
+                )
                 .rememberMe(Customizer.withDefaults())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
 

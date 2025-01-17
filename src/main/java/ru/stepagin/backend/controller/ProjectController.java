@@ -73,7 +73,7 @@ public class ProjectController {
     ) {
         String username = principal.getName();
         if (!author.equals(username)) {
-            throw new IllegalArgumentException("can delete only your own projects");
+            throw new IllegalArgumentException("can update only your own projects");
         }
         ProjectVersionEntity updated = projectService.updateProjectData(request, author, projectName, version);
         return ResponseEntity.ok(ProjectMapper.toDto(updated));
