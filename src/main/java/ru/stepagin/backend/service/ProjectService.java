@@ -35,9 +35,9 @@ public class ProjectService {
         ProjectVersionEntity project = new ProjectVersionEntity();
         project.setProjectCard(card);
         if (createRequest.getVersionName() != null && !createRequest.getVersionName().isEmpty())
-            project.setDisplayName(createRequest.getVersionName());
+            project.setVersionName(createRequest.getVersionName());
         else
-            project.setDisplayName("default");
+            project.setVersionName("default");
         project.setDescription(createRequest.getDescription());
         if (createRequest.getDisplayOrder() != null)
             project.setDisplayOrder(createRequest.getDisplayOrder());
@@ -128,7 +128,7 @@ public class ProjectService {
             project.getProjectCard().setName(request.getName());
         }
         if (request.getVersionName() != null) {
-            project.setDisplayName(request.getVersionName());
+            project.setVersionName(request.getVersionName());
         }
         if (request.getDescription() != null) {
             project.setDescription(request.getDescription());

@@ -46,6 +46,7 @@ public class ProjectMapper {
                 AuthorDto authorDto = new AuthorDto();
                 authorDto.setUsername(card.getAuthor().getUsername());
                 authorDto.setDisplayName(card.getAuthor().getDisplayName());
+                dto.setAuthor(authorDto);
             }
             dto.setCreatedOn(card.getCreatedOn() != null ? card.getCreatedOn() : null);
             dto.setUpdatedOn(card.getUpdatedOn() != null ? card.getUpdatedOn() : null);
@@ -59,7 +60,7 @@ public class ProjectMapper {
     private static String firstDisplayName(Set<ProjectVersionEntity> versions) {
         return versions.stream()
                 .findFirst()
-                .map(ProjectVersionEntity::getDisplayName)
+                .map(ProjectVersionEntity::getVersionName)
                 .orElse(null);
     }
 
@@ -67,7 +68,7 @@ public class ProjectMapper {
         return versions.stream()
                 .map(version -> new ProjectDetailsDtoResponse.ProjectVersionDto(
                         version.getId(),
-                        version.getDisplayName(),
+                        version.getVersionName(),
                         version.getDisplayOrder()))
                 .collect(Collectors.toList());
     }

@@ -24,7 +24,7 @@ public class ProjectVersionEntity {
     private Long id;
 
     @Column(name = "display_name", nullable = false)
-    private String displayName;
+    private String versionName;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "project_card_id", nullable = false)
