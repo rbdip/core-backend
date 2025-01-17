@@ -49,4 +49,18 @@ public class ProjectCardEntity {
 
     @OneToMany(mappedBy = "projectCard", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjectVersionEntity> projectVersions = new HashSet<>();
+
+    public void addProjectVersion(ProjectVersionEntity projectVersion) {
+        if (projectVersions.contains(projectVersion) || projectVersion == null) {
+            return;
+        }
+        projectVersions.add(projectVersion);
+    }
+
+    public void removeProjectVersion(ProjectVersionEntity projectVersion) {
+        if (!projectVersions.contains(projectVersion) || projectVersion == null) {
+            return;
+        }
+        projectVersions.remove(projectVersion);
+    }
 }

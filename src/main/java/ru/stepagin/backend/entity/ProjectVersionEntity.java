@@ -26,7 +26,7 @@ public class ProjectVersionEntity {
     @Column(name = "display_name", nullable = false)
     private String displayName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "project_card_id", nullable = false)
     private ProjectCardEntity projectCard;
 
@@ -43,7 +43,7 @@ public class ProjectVersionEntity {
     private LocalDateTime deletedOn;
 
     //    @Lob todo узнать надо ли лоб
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
     @Column(name = "display_order", nullable = false)

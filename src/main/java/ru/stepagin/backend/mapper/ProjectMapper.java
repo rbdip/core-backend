@@ -1,9 +1,5 @@
 package ru.stepagin.backend.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 import ru.stepagin.backend.dto.ProjectCardDtoResponse;
 import ru.stepagin.backend.dto.ProjectDetailsDtoResponse;
 import ru.stepagin.backend.entity.ProjectCardEntity;
@@ -11,40 +7,64 @@ import ru.stepagin.backend.entity.ProjectVersionEntity;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Mapper
-public interface ProjectMapper {
-    ProjectMapper INSTANCE = Mappers.getMapper(ProjectMapper.class);
+public class ProjectMapper {
 
-    @Mapping(target = "author", expression = "java(entity.getAuthor().getUsername())")
-    @Mapping(target = "authorDisplayName", expression = "java(entity.getAuthor().getDisplayName())")
-    ProjectCardDtoResponse toDto(ProjectCardEntity entity);
+    public static ProjectCardDtoResponse toDto(ProjectCardEntity entity) {
+        if (entity == null) {
+            return null;
+        }
 
-    @Mapping(target = "id", expression = "java(entity.getProjectCard().getId())")
-    @Mapping(target = "title", expression = "java(entity.getProjectCard().getTitle())")
-    @Mapping(target = "name", expression = "java(entity.getProjectCard().getName())")
-    @Mapping(target = "authorUsername", expression = "java(entity.getProjectCard().getAuthor().getUsername())")
-    @Mapping(target = "authorDisplayName", expression = "java(entity.getProjectCard().getAuthor().getDisplayName())")
-    @Mapping(target = "createdOn", expression = "java(entity.getProjectCard().getCreatedOn())")
-    @Mapping(target = "updatedOn", expression = "java(entity.getProjectCard().getUpdatedOn())")
-    @Mapping(target = "displayVersion", source = "entity.projectCard.projectVersions", qualifiedByName = "firstDisplayName")
-    @Mapping(target = "versions", source = "entity.projectCard.projectVersions", qualifiedByName = "toProjectVersionDtos")
-    ProjectDetailsDtoResponse toDto(ProjectVersionEntity entity);
+        ProjectCardDtoResponse dto = new ProjectCardDtoResponse();
+        dto.setId(entity.getId());
+        dto.setTitle(entity.getTitle());
+        dto.setName(entity.getName());
+        if (entity.getAuthor() != null) {
+            dto.setAuthor(entity.getAuthor().getUsername());
+            dto.setAuthorDisplayName(entity.getAuthor().getDisplayName());
+        }
+        dto.setCreatedOn(entity.getCreatedOn() != null ? entity.getCreatedOn().toLocalDate() : null);
+        return dto;
+    }
 
-    @Named("firstDisplayName")
-    default String firstDisplayName(Set<ProjectVersionEntity> versions) {
+    public static ProjectDetailsDtoResponse toDto(ProjectVersionEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        ProjectDetailsDtoResponse dto = new ProjectDetailsDtoResponse();
+        ProjectCardEntity card = entity.getProjectCard();
+        if (card != null) {
+            dto.setId(card.getId());
+            dto.setTitle(card.getTitle());
+            dto.setName(card.getName());
+            if (card.getAuthor() != null) {
+                dto.setAuthorUsername(card.getAuthor().getUsername());
+                dto.setAuthorDisplayName(card.getAuthor().getDisplayName());
+            }
+            dto.setCreatedOn(card.getCreatedOn() != null ? card.getCreatedOn().toLocalDate() : null);
+            dto.setUpdatedOn(card.getUpdatedOn() != null ? card.getUpdatedOn().toLocalDate() : null);
+            dto.setDisplayVersion(firstDisplayName(card.getProjectVersions()));
+            dto.setVersions(toProjectVersionDtos(card.getProjectVersions()));
+        }
+        dto.setDescription(entity.getDescription());
+        return dto;
+    }
+
+    private static String firstDisplayName(Set<ProjectVersionEntity> versions) {
         return versions.stream()
-                .limit(1)
                 .findFirst()
                 .map(ProjectVersionEntity::getDisplayName)
                 .orElse(null);
     }
 
-    @Named("toProjectVersionDtos")
-    default List<ProjectDetailsDtoResponse.projectVersionDto> toProjectVersionDtos(Set<ProjectVersionEntity> versions) {
+    private static List<ProjectDetailsDtoResponse.projectVersionDto> toProjectVersionDtos(Set<ProjectVersionEntity> versions) {
         return versions.stream()
-                .map(v -> new ProjectDetailsDtoResponse.projectVersionDto(v.getId(), v.getDisplayName(), v.getDisplayOrder()))
-                .toList();
+                .map(version -> new ProjectDetailsDtoResponse.projectVersionDto(
+                        version.getId(),
+                        version.getDisplayName(),
+                        version.getDisplayOrder()))
+                .collect(Collectors.toList());
     }
-
 }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import ru.stepagin.backend.dto.CreateProjectDtoRequest;
 import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.entity.UserEntity;
@@ -16,7 +17,6 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Validated
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectCardRepository projectCardRepository;
@@ -69,4 +69,38 @@ public class ProjectService {
     }
 
 
+    private static ProjectVersionEntity createProjectVersionEntity(CreateProjectDtoRequest createRequest, ProjectCardEntity card) {
+        ProjectVersionEntity project = new ProjectVersionEntity();
+        project.setProjectCard(card);
+        if (createRequest.getDisplayVersion() != null && !createRequest.getDisplayVersion().isEmpty())
+            project.setDisplayName(createRequest.getDisplayVersion());
+        else
+            project.setDisplayName("default");
+        project.setDescription(createRequest.getDescription());
+        if (createRequest.getDisplayOrder() != null)
+            project.setDisplayOrder(createRequest.getDisplayOrder());
+        else
+            project.setDisplayOrder(1);
+        return project;
+    }
+
+    public ProjectVersionEntity createProject(
+            @Validated CreateProjectDtoRequest createRequest,
+            String username
+    ) {
+        UserEntity author = userRepository.findByUsername(username); // todo: получение из авторизации
+        if (author == null) {
+            author = createUserEntity(username);
+        }
+
+        ProjectCardEntity card = new ProjectCardEntity();
+        card.setName(createRequest.getName());
+        card.setTitle(createRequest.getTitle());
+        card.setAuthor(author);
+
+        ProjectVersionEntity project = createProjectVersionEntity(createRequest, card);
+        card.addProjectVersion(project);
+
+        return projectVersionRepository.save(project);
+    }
 }

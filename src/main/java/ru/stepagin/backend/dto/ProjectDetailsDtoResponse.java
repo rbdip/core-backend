@@ -27,7 +27,13 @@ public class ProjectDetailsDtoResponse {
     private String displayVersion;
     private List<projectVersionDto> versions;
 
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @ToString
+    @EqualsAndHashCode
     @AllArgsConstructor
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class projectVersionDto {
         private Long id;
         private String displayName;
