@@ -1,6 +1,5 @@
 package ru.stepagin.backend.service;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,38 +43,6 @@ public class ProjectService {
         else
             project.setDisplayOrder(1);
         return project;
-    }
-
-    @PostConstruct
-    public void init() {
-//        var user = createUserEntity("Stupapupa1");
-//        var card = createProjectCard("stupa-project", "Микросервис типа", user);
-//        var version1 = createProjectVersion("Default", 2, card);
-//        var version2 = createProjectVersion("v0.0.1-SNAPSHOT", 1, card);
-    }
-
-    private UserEntity createUserEntity(String username) {
-        UserEntity user = new UserEntity();
-        user.setUsername(username);
-        user.setPassword(username);
-        user.setDisplayName(username);
-        return userRepository.save(user);
-    }
-
-    private ProjectVersionEntity createProjectVersion(String displayName, int displayOrder, ProjectCardEntity card) {
-        ProjectVersionEntity projectVersion = new ProjectVersionEntity();
-        projectVersion.setDisplayName(displayName);
-        projectVersion.setDisplayOrder(displayOrder);
-        projectVersion.setProjectCard(card);
-        return projectVersionRepository.save(projectVersion);
-    }
-
-    private ProjectCardEntity createProjectCard(String name, String title, UserEntity user) {
-        ProjectCardEntity projectCard = new ProjectCardEntity();
-        projectCard.setName(name);
-        projectCard.setTitle(title);
-        projectCard.setAuthor(user);
-        return projectCardRepository.save(projectCard);
     }
 
     public List<ProjectCardEntity> getAllProjects() {
@@ -137,13 +104,13 @@ public class ProjectService {
             project = projectVersionRepository.findProjectByVersion(author, projectName, version);
         }
         if (project == null) {
-            throw new IllegalArgumentException("Project version " + version + " not found");
+            throw new IllegalArgumentException("Project version '" + version + "' not found");
         }
         if (request.getTitle() == null
                 && request.getProjectName() == null
                 && request.getVersionName() == null
                 && request.getDescription() == null) {
-            throw new IllegalArgumentException("At least one parameter required");
+            throw new IllegalArgumentException("At least one parameter is required");
         }
 
         if (request.getTitle() != null) {

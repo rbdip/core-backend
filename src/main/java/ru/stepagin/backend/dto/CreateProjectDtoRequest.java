@@ -23,13 +23,13 @@ public class CreateProjectDtoRequest {
     @NotNull
     @NotEmpty
     @Size(min = 5, max = 255)
-    @Pattern(regexp = "[a-zA-Z\\-_0-9]")
+    @Pattern(regexp = "[a-zA-Z\\-_0-9]+")
     private String name;
 
     @NotNull
     private String description;
 
-    @Pattern(regexp = "[a-zA-Z\\-_0-9.]")
+    @Pattern(regexp = "[a-zA-Z\\-_0-9.]+")
     private String displayVersion;
 
     private Integer displayOrder;

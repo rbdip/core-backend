@@ -20,10 +20,10 @@ public class UpdateProjectDtoRequest {
 
     @NotEmpty
     @Size(min = 5, max = 255)
-    @Pattern(regexp = "[a-zA-Z\\-_0-9]")
+    @Pattern(regexp = "[a-zA-Z\\-_0-9]+")
     private String projectName;
 
-    @Pattern(regexp = "[a-zA-Z\\-_0-9.]")
+    @Pattern(regexp = "[a-zA-Z\\-_0-9.]+")
     private String versionName;
 
     private String description;

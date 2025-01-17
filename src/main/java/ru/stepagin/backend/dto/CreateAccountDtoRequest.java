@@ -17,7 +17,7 @@ import lombok.*;
 public class CreateAccountDtoRequest {
     @NotNull
     @Size(min = 5, max = 32)
-    @Pattern(regexp = "[a-zA-Z\\-_0-9]")
+    @Pattern(regexp = "[a-zA-Z\\-_0-9]+")
     private String username;
 
     @NotNull
