@@ -9,6 +9,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "account")
@@ -46,4 +48,7 @@ public class UserEntity {
 
     @Column(name = "last_login_on")
     private LocalDateTime lastLoginOn;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ProjectCardEntity> projects = new HashSet<>();
 }

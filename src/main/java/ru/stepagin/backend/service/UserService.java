@@ -1,9 +1,9 @@
 package ru.stepagin.backend.service;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.stepagin.backend.entity.UserEntity;
 import ru.stepagin.backend.repository.UserRepository;
 
 @Service
@@ -12,7 +12,7 @@ import ru.stepagin.backend.repository.UserRepository;
 public class UserService {
     private final UserRepository userRepository;
 
-    @PostConstruct
-    public void init() {
+    public UserEntity getByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

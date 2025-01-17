@@ -2,6 +2,7 @@ package ru.stepagin.backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.stepagin.backend.dto.CreateProjectDtoRequest;
 import ru.stepagin.backend.dto.ProjectCardDtoResponse;
@@ -21,27 +22,27 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public List<ProjectCardDtoResponse> getProjects() { // todo: фильтрация и сортировка
+    public ResponseEntity<List<ProjectCardDtoResponse>> getProjects() { // todo: фильтрация и сортировка
         List<ProjectCardEntity> projects = projectService.getAllProjects();
-        return projects.stream().map(ProjectMapper::toDto).toList();
+        return ResponseEntity.ok(projects.stream().map(ProjectMapper::toDto).toList());
     }
 
     @GetMapping("/{author}/{name}")
-    public ProjectDetailsDtoResponse getProjectDetails(
+    public ResponseEntity<ProjectDetailsDtoResponse> getProjectDetails(
             @PathVariable(name = "author") String author,
             @PathVariable(name = "name") String projectName,
             @RequestParam(value = "version", required = false) String version
     ) { // todo: фильтрация и сортировка
         ProjectVersionEntity project = projectService.getProject(author, projectName, version);
-        return ProjectMapper.toDto(project);
+        return ResponseEntity.ok(ProjectMapper.toDto(project));
     }
 
     @PostMapping
-    public ProjectDetailsDtoResponse createProject(
+    public ResponseEntity<ProjectDetailsDtoResponse> createProject(
             @RequestBody CreateProjectDtoRequest request
     ) {
         ProjectVersionEntity project = projectService.createProject(request, "admin");
-        return ProjectMapper.toDto(project);
+        return ResponseEntity.ok(ProjectMapper.toDto(project));
     }
 
 
