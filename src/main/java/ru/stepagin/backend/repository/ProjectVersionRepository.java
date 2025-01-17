@@ -11,7 +11,7 @@ import ru.stepagin.backend.entity.ProjectVersionEntity;
 public interface ProjectVersionRepository extends JpaRepository<ProjectVersionEntity, Long> {
     @Query("""
             select p from ProjectVersionEntity p
-            where upper(p.projectCard.author.username) = upper(?1) and upper(p.projectCard.name) = upper(?2) 
+            where upper(p.projectCard.author.username) = upper(?1) and upper(p.projectCard.name) = upper(?2)
             and p.displayName = ?3""")
     ProjectVersionEntity findProjectByVersion(String username, String projectName, String version);
 

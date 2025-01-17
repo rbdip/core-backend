@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -20,9 +20,9 @@ public class ProjectDetailsDtoResponse {
     private String name;
     private String authorUsername;
     private String authorDisplayName;
-    private LocalDate createdOn;
+    private LocalDateTime createdOn;
 
-    private LocalDate updatedOn;
+    private LocalDateTime updatedOn;
     private String description;
     private String displayVersion;
     private List<projectVersionDto> versions;

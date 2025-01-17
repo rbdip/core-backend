@@ -37,7 +37,7 @@ public class UserController {
     ) {
         String actorName = principal.getName();
         if (!actorName.equals(userToDelete)) {
-            throw new IllegalArgumentException("cannot delete other users");
+            throw new IllegalArgumentException("Cannot delete other users");
         }
         userService.deleteUser(userToDelete);
         return ResponseEntity.noContent().build();
@@ -51,7 +51,7 @@ public class UserController {
     ) {
         String actorName = principal.getName();
         if (!actorName.equals(userToUpdate)) {
-            throw new IllegalArgumentException("cannot update other users");
+            throw new IllegalArgumentException("Cannot update other users");
         }
         UserEntity updated = userService.updateUserData(userToUpdate, request);
         return ResponseEntity.ok(UserMapper.toCard(updated));

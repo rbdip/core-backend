@@ -24,7 +24,7 @@ public class ProjectMapper {
             dto.setAuthor(entity.getAuthor().getUsername());
             dto.setAuthorDisplayName(entity.getAuthor().getDisplayName());
         }
-        dto.setCreatedOn(entity.getCreatedOn() != null ? entity.getCreatedOn().toLocalDate() : null);
+        dto.setCreatedOn(entity.getCreatedOn() != null ? entity.getCreatedOn() : null);
         return dto;
     }
 
@@ -43,8 +43,8 @@ public class ProjectMapper {
                 dto.setAuthorUsername(card.getAuthor().getUsername());
                 dto.setAuthorDisplayName(card.getAuthor().getDisplayName());
             }
-            dto.setCreatedOn(card.getCreatedOn() != null ? card.getCreatedOn().toLocalDate() : null);
-            dto.setUpdatedOn(card.getUpdatedOn() != null ? card.getUpdatedOn().toLocalDate() : null);
+            dto.setCreatedOn(card.getCreatedOn() != null ? card.getCreatedOn() : null);
+            dto.setUpdatedOn(card.getUpdatedOn() != null ? card.getUpdatedOn() : null);
             dto.setDisplayVersion(firstDisplayName(card.getProjectVersions()));
             dto.setVersions(toProjectVersionDtos(card.getProjectVersions()));
         }

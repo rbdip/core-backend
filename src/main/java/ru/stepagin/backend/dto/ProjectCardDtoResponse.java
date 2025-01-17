@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,5 +19,5 @@ public class ProjectCardDtoResponse {
     private String name;
     private String author;
     private String authorDisplayName;
-    private LocalDate createdOn;
+    private LocalDateTime createdOn;
 }
