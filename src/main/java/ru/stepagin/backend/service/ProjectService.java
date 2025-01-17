@@ -34,8 +34,8 @@ public class ProjectService {
     ) {
         ProjectVersionEntity project = new ProjectVersionEntity();
         project.setProjectCard(card);
-        if (createRequest.getDisplayVersion() != null && !createRequest.getDisplayVersion().isEmpty())
-            project.setDisplayName(createRequest.getDisplayVersion());
+        if (createRequest.getVersionName() != null && !createRequest.getVersionName().isEmpty())
+            project.setDisplayName(createRequest.getVersionName());
         else
             project.setDisplayName("default");
         project.setDescription(createRequest.getDescription());
@@ -115,7 +115,7 @@ public class ProjectService {
             throw new EntityNotFoundException("Project version '" + version + "' not found");
         }
         if (request.getTitle() == null
-                && request.getProjectName() == null
+                && request.getName() == null
                 && request.getVersionName() == null
                 && request.getDescription() == null) {
             throw new IllegalArgumentException("At least one parameter is required");
@@ -124,8 +124,8 @@ public class ProjectService {
         if (request.getTitle() != null) {
             project.getProjectCard().setTitle(request.getTitle());
         }
-        if (request.getProjectName() != null) {
-            project.getProjectCard().setName(request.getProjectName());
+        if (request.getName() != null) {
+            project.getProjectCard().setName(request.getName());
         }
         if (request.getVersionName() != null) {
             project.setDisplayName(request.getVersionName());

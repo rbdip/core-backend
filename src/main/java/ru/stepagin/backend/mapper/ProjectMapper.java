@@ -1,5 +1,6 @@
 package ru.stepagin.backend.mapper;
 
+import ru.stepagin.backend.dto.AuthorDto;
 import ru.stepagin.backend.dto.ProjectCardDtoResponse;
 import ru.stepagin.backend.dto.ProjectDetailsDtoResponse;
 import ru.stepagin.backend.entity.ProjectCardEntity;
@@ -21,8 +22,10 @@ public class ProjectMapper {
         dto.setTitle(entity.getTitle());
         dto.setName(entity.getName());
         if (entity.getAuthor() != null) {
-            dto.setAuthor(entity.getAuthor().getUsername());
-            dto.setAuthorDisplayName(entity.getAuthor().getDisplayName());
+            AuthorDto authorDto = new AuthorDto();
+            authorDto.setUsername(entity.getAuthor().getUsername());
+            authorDto.setDisplayName(entity.getAuthor().getDisplayName());
+            dto.setAuthor(authorDto);
         }
         dto.setCreatedOn(entity.getCreatedOn() != null ? entity.getCreatedOn() : null);
         return dto;
@@ -40,8 +43,9 @@ public class ProjectMapper {
             dto.setTitle(card.getTitle());
             dto.setName(card.getName());
             if (card.getAuthor() != null) {
-                dto.setAuthorUsername(card.getAuthor().getUsername());
-                dto.setAuthorDisplayName(card.getAuthor().getDisplayName());
+                AuthorDto authorDto = new AuthorDto();
+                authorDto.setUsername(card.getAuthor().getUsername());
+                authorDto.setDisplayName(card.getAuthor().getDisplayName());
             }
             dto.setCreatedOn(card.getCreatedOn() != null ? card.getCreatedOn() : null);
             dto.setUpdatedOn(card.getUpdatedOn() != null ? card.getUpdatedOn() : null);
@@ -59,9 +63,9 @@ public class ProjectMapper {
                 .orElse(null);
     }
 
-    private static List<ProjectDetailsDtoResponse.projectVersionDto> toProjectVersionDtos(Set<ProjectVersionEntity> versions) {
+    private static List<ProjectDetailsDtoResponse.ProjectVersionDto> toProjectVersionDtos(Set<ProjectVersionEntity> versions) {
         return versions.stream()
-                .map(version -> new ProjectDetailsDtoResponse.projectVersionDto(
+                .map(version -> new ProjectDetailsDtoResponse.ProjectVersionDto(
                         version.getId(),
                         version.getDisplayName(),
                         version.getDisplayOrder()))

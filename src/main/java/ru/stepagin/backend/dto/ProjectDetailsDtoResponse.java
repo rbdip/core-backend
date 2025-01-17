@@ -18,14 +18,13 @@ public class ProjectDetailsDtoResponse {
     private Long id;
     private String title;
     private String name;
-    private String authorUsername;
-    private String authorDisplayName;
+    private AuthorDto author;
     private LocalDateTime createdOn;
 
     private LocalDateTime updatedOn;
     private String description;
     private String displayVersion;
-    private List<projectVersionDto> versions;
+    private List<ProjectVersionDto> versions;
 
     @NoArgsConstructor
     @Getter
@@ -34,9 +33,9 @@ public class ProjectDetailsDtoResponse {
     @EqualsAndHashCode
     @AllArgsConstructor
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class projectVersionDto {
+    public static class ProjectVersionDto {
         private Long id;
-        private String displayName;
+        private String versionName;
         private Integer displayOrder;
     }
 }
