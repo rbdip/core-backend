@@ -23,7 +23,7 @@ public class ProjectVersionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "display_name", nullable = false)
+    @Column(name = "version_name", nullable = false)
     private String versionName;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
