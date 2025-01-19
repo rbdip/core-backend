@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import ru.stepagin.backend.dto.CreateAccountDtoRequest;
 import ru.stepagin.backend.dto.UpdateUserDtoRequest;
 import ru.stepagin.backend.entity.UserEntity;
-import ru.stepagin.backend.exception.EntityNotFoundException;
+import ru.stepagin.backend.exception.UserNotFoundException;
 import ru.stepagin.backend.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -46,7 +46,7 @@ public class UserService {
     public void deleteUser(String userToDeleteName) {
         UserEntity userToDelete = userRepository.findByUsername(userToDeleteName);
         if (userToDelete == null) {
-            throw new EntityNotFoundException("User not found");
+            throw new UserNotFoundException(userToDeleteName);
         }
         projectService.deleteAllProjectsByUser(userToDelete);
         userRepository.deleteByUsername(userToDeleteName);
