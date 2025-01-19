@@ -3,6 +3,7 @@ package ru.stepagin.backend.mapper;
 import ru.stepagin.backend.dto.AuthorDto;
 import ru.stepagin.backend.dto.ProjectCardDtoResponse;
 import ru.stepagin.backend.dto.ProjectDetailsDtoResponse;
+import ru.stepagin.backend.dto.ProjectVersionDto;
 import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 
@@ -62,9 +63,9 @@ public class ProjectMapper {
                 .orElse(null);
     }
 
-    private static List<ProjectDetailsDtoResponse.ProjectVersionDto> toProjectVersionDtos(Set<ProjectVersionEntity> versions) {
+    public static List<ProjectVersionDto> toProjectVersionDtos(Set<ProjectVersionEntity> versions) {
         return versions.stream()
-                .map(v -> new ProjectDetailsDtoResponse.ProjectVersionDto(
+                .map(v -> new ProjectVersionDto(
                                 v.getVersionName(),
                                 v.getDisplayOrder(),
                                 v.getCreatedOn(),

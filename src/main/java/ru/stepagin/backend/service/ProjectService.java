@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.stepagin.backend.dto.CreateProjectDtoRequest;
+import ru.stepagin.backend.dto.CreateProjectVersionDtoRequest;
 import ru.stepagin.backend.dto.UpdateProjectDtoRequest;
 import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.entity.UserEntity;
+import ru.stepagin.backend.exception.ProjectAlreadyExistsException;
 import ru.stepagin.backend.exception.ProjectNotFoundException;
 import ru.stepagin.backend.exception.UserNotFoundException;
 import ru.stepagin.backend.repository.ProjectCardRepository;
@@ -51,7 +53,11 @@ public class ProjectService {
         return projectCardRepository.findAll();
     }
 
-    public ProjectVersionEntity getProject(String author, String projectName, String version) {
+    public ProjectVersionEntity getProject(
+            String author,
+            String projectName,
+            String version
+    ) {
         UserEntity user = userRepository.findByUsername(author);
         if (user == null)
             throw new ProjectNotFoundException(author, projectName);
@@ -114,8 +120,7 @@ public class ProjectService {
             String projectName,
             String version
     ) {
-        ProjectVersionEntity project;
-        project = projectVersionRepository.findProject(author, projectName);
+        ProjectVersionEntity project = projectVersionRepository.findProject(author, projectName);
         if (project == null) {
             throw new ProjectNotFoundException(author, projectName);
         }
@@ -154,5 +159,32 @@ public class ProjectService {
             projectVersionRepository.deleteAllByAuthorAndName(userToDelete.getUsername(), project.getName());
         }
         projectCardRepository.deleteAllByAuthor(userToDelete.getUsername());
+    }
+
+    public ProjectVersionEntity createProjectVersion(
+            @Valid CreateProjectVersionDtoRequest request,
+            String author,
+            String projectName
+    ) {
+        ProjectCardEntity project = projectCardRepository.findByNameAndAuthor(author, projectName);
+        if (project == null) {
+            throw new ProjectNotFoundException(author, projectName);
+        }
+//        if (project.getAuthor() == null) todo посмотреть при удалении пользователя
+//            throw new ProjectNotFoundException(author, projectName);
+        if (project.getProjectVersions().stream()
+                .map(ProjectVersionEntity::getVersionName)
+                .anyMatch(request.getVersionName()::equalsIgnoreCase)
+        ) {
+            throw new ProjectAlreadyExistsException(author, projectName, request.getVersionName());
+        }
+
+        ProjectVersionEntity version = new ProjectVersionEntity();
+        version.setVersionName(request.getVersionName());
+        version.setDisplayOrder(request.getDisplayOrder());
+        version.setDescription(request.getDescription());
+        project.addProjectVersion(version);
+
+        return projectVersionRepository.save(version);
     }
 }

@@ -6,6 +6,6 @@ public class ProjectNotFoundException extends EntityNotFoundException {
     }
 
     public ProjectNotFoundException(String username, String projectName, String projectVersion) {
-        super("Project not found: " + username + "/" + projectName + " on version " + projectVersion);
+        super("Project not found: " + username + "/" + projectName + " on version '" + projectVersion + "'");
     }
 }

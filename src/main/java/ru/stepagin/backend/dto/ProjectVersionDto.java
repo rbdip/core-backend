@@ -5,23 +5,17 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 @EqualsAndHashCode
+@AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProjectDetailsDtoResponse {
-    private String title;
-    private String name;
-    private AuthorDto author;
+public class ProjectVersionDto {
+    private String versionName;
+    private Integer displayOrder;
     private LocalDateTime createdOn;
-
     private LocalDateTime updatedOn;
-    private String description;
-    private String displayVersion;
-    private List<ProjectVersionDto> versions;
 }

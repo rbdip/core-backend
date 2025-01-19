@@ -60,6 +60,7 @@ public class ProjectCardEntity {
         if (projectVersions.contains(projectVersion) || projectVersion == null) {
             return;
         }
+        projectVersion.setProjectCard(this);
         projectVersions.add(projectVersion);
     }
 

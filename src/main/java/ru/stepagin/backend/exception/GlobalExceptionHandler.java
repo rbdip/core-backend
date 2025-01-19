@@ -27,7 +27,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            IllegalArgumentException.class
+            IllegalArgumentException.class,
+            EntityAlreadyExistsException.class
     })
     public ResponseEntity<CustomProblemDetail> handleBadRequest(RuntimeException ex) {
         CustomProblemDetail problemDetail = new CustomProblemDetail(
