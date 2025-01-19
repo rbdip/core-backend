@@ -7,7 +7,6 @@ public class UserMapper {
 
     public static UserCardDtoResponse toCard(UserEntity entity) {
         UserCardDtoResponse dto = new UserCardDtoResponse();
-        dto.setId(entity.getId());
         dto.setCreatedOn(entity.getCreatedOn());
         dto.setUsername(entity.getUsername());
         dto.setProjects(entity.getProjects().stream().map(ProjectMapper::toDto).toList());

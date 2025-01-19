@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProjectCardDtoResponse {
-    private Long id;
     private String title;
     private String name;
     private AuthorDto author;

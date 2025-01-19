@@ -18,7 +18,6 @@ public class ProjectMapper {
         }
 
         ProjectCardDtoResponse dto = new ProjectCardDtoResponse();
-        dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
         dto.setName(entity.getName());
         if (entity.getAuthor() != null) {
@@ -40,7 +39,6 @@ public class ProjectMapper {
         ProjectCardEntity card = entity.getProjectCard();
         if (card != null) {
             ProjectVersionEntity displayVersion = firstDisplayName(card.getProjectVersions());
-            dto.setId(card.getId());
             dto.setTitle(card.getTitle());
             dto.setName(card.getName());
             if (card.getAuthor() != null) {
@@ -67,7 +65,6 @@ public class ProjectMapper {
     private static List<ProjectDetailsDtoResponse.ProjectVersionDto> toProjectVersionDtos(Set<ProjectVersionEntity> versions) {
         return versions.stream()
                 .map(v -> new ProjectDetailsDtoResponse.ProjectVersionDto(
-                                v.getId(),
                                 v.getVersionName(),
                                 v.getDisplayOrder(),
                                 v.getCreatedOn(),

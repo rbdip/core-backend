@@ -12,6 +12,7 @@ import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.entity.UserEntity;
 import ru.stepagin.backend.exception.EntityNotFoundException;
+import ru.stepagin.backend.exception.ProjectNotFoundException;
 import ru.stepagin.backend.repository.ProjectCardRepository;
 import ru.stepagin.backend.repository.ProjectVersionRepository;
 import ru.stepagin.backend.repository.UserRepository;
@@ -53,11 +54,11 @@ public class ProjectService {
     public ProjectVersionEntity getProject(String author, String projectName, String version) {
         UserEntity user = userRepository.findByUsername(author);
         if (user == null)
-            throw new EntityNotFoundException("Author not found: " + author);
+            throw new ProjectNotFoundException(author, projectName);
 
         ProjectCardEntity projectCard = projectCardRepository.findByNameAndAuthor(author, projectName);
         if (projectCard == null) {
-            throw new EntityNotFoundException("Project not found: " + author + "/" + projectName);
+            throw new ProjectNotFoundException(author, projectName);
         }
 
         if (version != null) {
@@ -68,7 +69,7 @@ public class ProjectService {
         }
 
         return projectCard.getProjectVersions().stream().findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Project not found: " + author + "/" + projectName)
+                .orElseThrow(() -> new ProjectNotFoundException(author, projectName)
                 );
     }
 

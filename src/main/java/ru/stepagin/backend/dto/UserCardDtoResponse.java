@@ -15,7 +15,6 @@ import java.util.List;
 @EqualsAndHashCode
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserCardDtoResponse {
-    private Long id;
     private String username;
     private String displayName;
     private LocalDateTime createdOn;
