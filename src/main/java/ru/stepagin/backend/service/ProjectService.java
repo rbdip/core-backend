@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import ru.stepagin.backend.dto.CreateProjectDtoRequest;
 import ru.stepagin.backend.dto.CreateProjectVersionDtoRequest;
 import ru.stepagin.backend.dto.UpdateProjectDtoRequest;
+import ru.stepagin.backend.dto.UpdateProjectVersionDtoRequest;
 import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.entity.UserEntity;
@@ -20,6 +21,7 @@ import ru.stepagin.backend.repository.ProjectVersionRepository;
 import ru.stepagin.backend.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -67,16 +69,20 @@ public class ProjectService {
             throw new ProjectNotFoundException(author, projectName);
         }
 
+        ProjectVersionEntity projectVersion;
         if (version != null) {
-            ProjectVersionEntity projectVersion = projectVersionRepository.findProjectByVersion(author, projectName, version);
+            projectVersion = projectVersionRepository.findProjectByVersion(author, projectName, version);
             if (projectVersion != null) {
                 return projectVersion;
             }
         }
 
-        return projectCard.getProjectVersions().stream().findFirst()
-                .orElseThrow(() -> new ProjectNotFoundException(author, projectName)
-                );
+        projectVersion = projectCard.getProjectVersions().stream()
+                .min(Comparator.comparing(ProjectVersionEntity::getDisplayOrder)
+                        .thenComparing(ProjectVersionEntity::getCreatedOn))
+                .orElseThrow(() -> new ProjectNotFoundException(author, projectName));
+
+        return projectVersion;
     }
 
     public ProjectVersionEntity createProject(
@@ -186,5 +192,41 @@ public class ProjectService {
         project.addProjectVersion(version);
 
         return projectVersionRepository.save(version);
+    }
+
+    @Transactional
+    public ProjectVersionEntity updateProjectVersion(
+            @Valid UpdateProjectVersionDtoRequest request,
+            String author, // todo: чекнуть на null, добавить NotNull
+            String projectName,
+            String version
+    ) {
+        if (version == null || version.isEmpty()) {
+            throw new IllegalArgumentException("Project version must be clarified");
+        }
+
+        if (request.getVersionName() == null
+                && request.getDescription() == null
+                && request.getDisplayOrder() == null) {
+            throw new IllegalArgumentException("At least one parameter is required");
+        }
+
+        ProjectVersionEntity project = projectVersionRepository.findProjectByVersion(author, projectName, version);
+        if (project == null) {
+            throw new ProjectNotFoundException(author, projectName, version);
+        }
+
+        if (request.getVersionName() != null) {
+            project.setVersionName(request.getVersionName());
+        }
+        if (request.getDescription() != null) {
+            project.setDescription(request.getDescription());
+        }
+        if (request.getDisplayOrder() != null) {
+            project.setDisplayOrder(request.getDisplayOrder());
+        }
+
+        project.setUpdatedOn(LocalDateTime.now());
+        return projectVersionRepository.save(project);
     }
 }

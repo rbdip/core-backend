@@ -65,7 +65,7 @@ public class UserService {
         UserEntity user = getByUsername(userToUpdate);
         if (request.getDisplayName() == null
                 && request.getPassword() == null) {
-            throw new IllegalArgumentException("At least one parameter required");
+            throw new IllegalArgumentException("At least one parameter is required");
         }
 
         if (request.getDisplayName() != null) {

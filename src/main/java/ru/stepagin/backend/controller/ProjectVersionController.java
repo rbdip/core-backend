@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.stepagin.backend.dto.CreateProjectVersionDtoRequest;
 import ru.stepagin.backend.dto.ProjectDetailsDtoResponse;
 import ru.stepagin.backend.dto.ProjectVersionDto;
+import ru.stepagin.backend.dto.UpdateProjectVersionDtoRequest;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.mapper.ProjectMapper;
 import ru.stepagin.backend.service.ProjectService;
@@ -45,13 +46,20 @@ public class ProjectVersionController {
         return ResponseEntity.ok(ProjectMapper.toDto(project));
     }
 
-//    @PatchMapping("/{author}/{name}/versions/{version}")
-//    public ResponseEntity<ProjectDetailsDtoResponse> updateProjectVersion(
-//            @RequestBody UpdateProjectVersionDtoRequest request,
-//            @PathVariable(name = "author") String author,
-//            @PathVariable(name = "name") String projectName
-//    ) {
-//        String username = principal.getName();
-//
-//    }
+    @PatchMapping("/{author}/{name}/versions/{version}")
+    public ResponseEntity<ProjectDetailsDtoResponse> updateProjectVersions(
+            @RequestBody UpdateProjectVersionDtoRequest request,
+            @PathVariable(name = "author") String author,
+            @PathVariable(name = "name") String projectName,
+            @PathVariable(name = "version") String versionName,
+            Principal principal
+    ) {
+        String actorName = principal.getName();
+        if (!actorName.equals(author)) {
+            throw new IllegalArgumentException("Can update versions only on your own projects");
+        }
+        ProjectVersionEntity project = projectService.updateProjectVersion(request, author, projectName, versionName);
+        return ResponseEntity.ok(ProjectMapper.toDto(project));
+    }
+
 }

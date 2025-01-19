@@ -39,7 +39,7 @@ public class ProjectMapper {
         ProjectDetailsDtoResponse dto = new ProjectDetailsDtoResponse();
         ProjectCardEntity card = entity.getProjectCard();
         if (card != null) {
-            ProjectVersionEntity displayVersion = firstDisplayName(card.getProjectVersions());
+            ProjectVersionEntity displayVersion = entity;
             dto.setTitle(card.getTitle());
             dto.setName(card.getName());
             if (card.getAuthor() != null) {
