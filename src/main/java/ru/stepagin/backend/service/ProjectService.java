@@ -51,15 +51,25 @@ public class ProjectService {
     }
 
     public ProjectVersionEntity getProject(String author, String projectName, String version) {
-        // todo: assertions
-        ProjectVersionEntity project = projectVersionRepository.findProjectByVersion(author, projectName, version);
-        if (project == null) {
-            project = projectVersionRepository.findProject(author, projectName);
+        UserEntity user = userRepository.findByUsername(author);
+        if (user == null)
+            throw new EntityNotFoundException("Author not found: " + author);
+
+        ProjectCardEntity projectCard = projectCardRepository.findByNameAndAuthor(author, projectName);
+        if (projectCard == null) {
+            throw new EntityNotFoundException("Project not found: " + author + "/" + projectName);
         }
-        if (project == null) {
-            throw new EntityNotFoundException("Project " + author + "/" + projectName + " not found");
+
+        if (version != null) {
+            ProjectVersionEntity projectVersion = projectVersionRepository.findProjectByVersion(author, projectName, version);
+            if (projectVersion != null) {
+                return projectVersion;
+            }
         }
-        return project;
+
+        return projectCard.getProjectVersions().stream().findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Project not found: " + author + "/" + projectName)
+                );
     }
 
     public ProjectVersionEntity createProject(
@@ -71,7 +81,7 @@ public class ProjectService {
             throw new EntityNotFoundException("Username not found");
         }
 
-        if (projectCardRepository.existsProjectByNameAndAuthor(createRequest.getName(), username)) {
+        if (projectCardRepository.existsProjectByNameAndAuthor(username, createRequest.getName())) {
             throw new IllegalArgumentException("Project already exists");
         }
 

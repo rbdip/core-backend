@@ -13,18 +13,18 @@ public interface ProjectCardRepository extends JpaRepository<ProjectCardEntity, 
     @Query("""
             select p from ProjectCardEntity p
             where upper(p.name) = upper(:name) and upper(p.author.username) = upper(:username)""")
-    ProjectCardEntity findByNameAndAuthor(@Param("name") String name, @Param("username") String username);
+    ProjectCardEntity findByNameAndAuthor(@Param("username") String username, @Param("name") String projectName);
 
     @Query("""
             select (count(p) > 0) from ProjectCardEntity p
             where upper(p.name) = upper(:name) and upper(p.author.username) = upper(:username)""")
-    boolean existsProjectByNameAndAuthor(@Param("name") String name, @Param("username") String username);
+    boolean existsProjectByNameAndAuthor(@Param("username") String username, @Param("name") String projectName);
 
     @Transactional
     @Modifying
     @Query("update ProjectCardEntity p set p.isDeleted = true, p.deletedOn = CURRENT_TIMESTAMP, p.updatedOn = CURRENT_TIMESTAMP " +
             "where upper(p.author.username) = upper(:username) and upper(p.name) = upper(:name)")
-    void deleteAllByAuthorAndName(String username, String name);
+    void deleteAllByAuthorAndName(@Param("username") String username, @Param("name") String projectName);
 
     @Transactional
     @Modifying
