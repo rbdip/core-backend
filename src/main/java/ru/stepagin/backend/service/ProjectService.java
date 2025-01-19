@@ -229,4 +229,17 @@ public class ProjectService {
         project.setUpdatedOn(LocalDateTime.now());
         return projectVersionRepository.save(project);
     }
+
+    public void deleteProjectVersion(String author, String projectName, String versionName) {
+        ProjectVersionEntity project = projectVersionRepository.findProjectByVersion(author, projectName, versionName);
+        if (project == null) {
+            throw new ProjectNotFoundException(author, projectName, versionName);
+        }
+
+        projectVersionRepository.deleteVersion(
+                project.getProjectCard().getAuthor().getUsername(),
+                project.getProjectCard().getName(),
+                project.getVersionName()
+        );
+    }
 }

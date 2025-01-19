@@ -62,4 +62,19 @@ public class ProjectVersionController {
         return ResponseEntity.ok(ProjectMapper.toDto(project));
     }
 
+    @DeleteMapping("/{author}/{name}/versions/{version}")
+    public ResponseEntity<ProjectDetailsDtoResponse> updateProjectVersions(
+            @PathVariable(name = "author") String author,
+            @PathVariable(name = "name") String projectName,
+            @PathVariable(name = "version") String versionName,
+            Principal principal
+    ) {
+        String actorName = principal.getName();
+        if (!actorName.equals(author)) {
+            throw new IllegalArgumentException("Can delete versions only on your own projects");
+        }
+        projectService.deleteProjectVersion(author, projectName, versionName);
+        return ResponseEntity.noContent().build();
+    }
+
 }
