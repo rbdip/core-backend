@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Transactional
     @Modifying
-    @Query("delete from UserEntity u where upper(u.username) = upper(:username)")
+    @Query("UPDATE UserEntity u SET u.isDeleted = true, u.deletedOn = CURRENT_TIMESTAMP, u.updatedOn = CURRENT_TIMESTAMP where upper(u.username) = upper(:username)")
     void deleteByUsername(String username);
 
 }

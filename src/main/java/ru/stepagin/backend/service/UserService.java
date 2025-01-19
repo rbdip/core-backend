@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProjectService projectService;
 
     public UserEntity getByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -43,10 +44,11 @@ public class UserService {
 
     @Transactional
     public void deleteUser(String userToDeleteName) {
-        UserEntity user = getByUsername(userToDeleteName);
-        if (user == null) {
+        UserEntity userToDelete = userRepository.findByUsername(userToDeleteName);
+        if (userToDelete == null) {
             throw new EntityNotFoundException("User not found");
         }
+        projectService.deleteAllProjectsByUser(userToDelete);
         userRepository.deleteByUsername(userToDeleteName);
     }
 

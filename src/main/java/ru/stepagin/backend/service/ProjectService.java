@@ -136,4 +136,12 @@ public class ProjectService {
         project.setUpdatedOn(LocalDateTime.now());
         return projectVersionRepository.save(project);
     }
+
+    @Transactional
+    public void deleteAllProjectsByUser(UserEntity userToDelete) {
+        for (ProjectCardEntity project : userToDelete.getProjects()) {
+            projectVersionRepository.deleteAllByAuthorAndName(userToDelete.getUsername(), project.getName());
+        }
+        projectCardRepository.deleteAllByAuthor(userToDelete.getUsername());
+    }
 }

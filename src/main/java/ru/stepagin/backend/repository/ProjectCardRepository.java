@@ -26,5 +26,11 @@ public interface ProjectCardRepository extends JpaRepository<ProjectCardEntity, 
             "where upper(p.author.username) = upper(:username) and upper(p.name) = upper(:name)")
     void deleteAllByAuthorAndName(String username, String name);
 
+    @Transactional
+    @Modifying
+    @Query("update ProjectCardEntity p set p.isDeleted = true, p.deletedOn = CURRENT_TIMESTAMP, p.updatedOn = CURRENT_TIMESTAMP " +
+            "where upper(p.author.username) = upper(:username)")
+    void deleteAllByAuthor(String username);
+
 
 }

@@ -39,6 +39,7 @@ public class ProjectMapper {
         ProjectDetailsDtoResponse dto = new ProjectDetailsDtoResponse();
         ProjectCardEntity card = entity.getProjectCard();
         if (card != null) {
+            ProjectVersionEntity displayVersion = firstDisplayName(card.getProjectVersions());
             dto.setId(card.getId());
             dto.setTitle(card.getTitle());
             dto.setName(card.getName());
@@ -49,27 +50,30 @@ public class ProjectMapper {
                 dto.setAuthor(authorDto);
             }
             dto.setCreatedOn(card.getCreatedOn() != null ? card.getCreatedOn() : null);
-            dto.setUpdatedOn(card.getUpdatedOn() != null ? card.getUpdatedOn() : null);
-            dto.setDisplayVersion(firstDisplayName(card.getProjectVersions()));
+            dto.setUpdatedOn(displayVersion.getUpdatedOn());
+            dto.setDisplayVersion(displayVersion.getVersionName());
             dto.setVersions(toProjectVersionDtos(card.getProjectVersions()));
         }
         dto.setDescription(entity.getDescription());
         return dto;
     }
 
-    private static String firstDisplayName(Set<ProjectVersionEntity> versions) {
+    private static ProjectVersionEntity firstDisplayName(Set<ProjectVersionEntity> versions) {
         return versions.stream()
                 .findFirst()
-                .map(ProjectVersionEntity::getVersionName)
                 .orElse(null);
     }
 
     private static List<ProjectDetailsDtoResponse.ProjectVersionDto> toProjectVersionDtos(Set<ProjectVersionEntity> versions) {
         return versions.stream()
-                .map(version -> new ProjectDetailsDtoResponse.ProjectVersionDto(
-                        version.getId(),
-                        version.getVersionName(),
-                        version.getDisplayOrder()))
+                .map(v -> new ProjectDetailsDtoResponse.ProjectVersionDto(
+                                v.getId(),
+                                v.getVersionName(),
+                                v.getDisplayOrder(),
+                                v.getCreatedOn(),
+                                v.getUpdatedOn()
+                        )
+                )
                 .collect(Collectors.toList());
     }
 }

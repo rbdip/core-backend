@@ -37,5 +37,7 @@ public class ProjectDetailsDtoResponse {
         private Long id;
         private String versionName;
         private Integer displayOrder;
+        private LocalDateTime createdOn;
+        private LocalDateTime updatedOn;
     }
 }
