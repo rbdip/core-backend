@@ -13,6 +13,7 @@ import ru.stepagin.backend.dto.ProjectCardWrapperDtoResponse;
 import ru.stepagin.backend.dto.UpdateProjectDtoRequest;
 import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.UserEntity;
+import ru.stepagin.backend.exception.ProjectAlreadyExistsException;
 import ru.stepagin.backend.exception.ProjectNotFoundException;
 import ru.stepagin.backend.exception.UserNotFoundException;
 import ru.stepagin.backend.mapper.ProjectMapper;
@@ -77,7 +78,7 @@ public class ProjectService {
         }
 
         if (projectCardRepository.existsProjectByNameAndAuthor(username, createRequest.getName())) {
-            throw new IllegalArgumentException("Project already exists");
+            throw new ProjectAlreadyExistsException(username, createRequest.getName());
         }
 
         ProjectCardEntity card = new ProjectCardEntity();
