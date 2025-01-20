@@ -35,6 +35,7 @@ public class CustomWebSecurityConfigurerAdapter {
                         .requestMatchers(HttpMethod.GET, prefix + "/projects").permitAll()
                         .requestMatchers(HttpMethod.GET, prefix + "/projects/*/*").permitAll()
                         .requestMatchers(HttpMethod.GET, prefix + "/projects/*/*/versions").permitAll()
+                        .requestMatchers(HttpMethod.GET, prefix + "/projects/*/*/versions/*").permitAll()
                         .requestMatchers(HttpMethod.GET, prefix + "/users/*").permitAll()
                         .anyRequest().authenticated()
                 )

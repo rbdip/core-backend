@@ -9,6 +9,7 @@ import ru.stepagin.backend.dto.ProjectDetailsDtoResponse;
 import ru.stepagin.backend.dto.ProjectVersionDto;
 import ru.stepagin.backend.dto.UpdateProjectVersionDtoRequest;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
+import ru.stepagin.backend.exception.ProjectNotFoundException;
 import ru.stepagin.backend.mapper.ProjectMapper;
 import ru.stepagin.backend.service.ProjectService;
 
@@ -75,6 +76,20 @@ public class ProjectVersionController {
         }
         projectService.deleteProjectVersion(author, projectName, versionName);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/{author}/{name}/versions/{version}")
+    public ResponseEntity<ProjectDetailsDtoResponse> updateProjectVersions(
+            @PathVariable(name = "author") String author,
+            @PathVariable(name = "name") String projectName,
+            @PathVariable(name = "version") String versionName
+    ) {
+        ProjectVersionEntity p = projectService.getProject(author, projectName, versionName);
+        if (!p.getVersionName().equalsIgnoreCase(versionName)) {
+            throw new ProjectNotFoundException(author, projectName, versionName);
+        }
+        return ResponseEntity.ok(ProjectMapper.toDto(p));
     }
 
 }
