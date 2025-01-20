@@ -48,7 +48,7 @@ public class ProjectVersionController {
     }
 
     @PatchMapping("/{author}/{name}/versions/{version}")
-    public ResponseEntity<ProjectDetailsDtoResponse> updateProjectVersions(
+    public ResponseEntity<ProjectDetailsDtoResponse> updateProjectVersion(
             @RequestBody UpdateProjectVersionDtoRequest request,
             @PathVariable(name = "author") String author,
             @PathVariable(name = "name") String projectName,
@@ -64,7 +64,7 @@ public class ProjectVersionController {
     }
 
     @DeleteMapping("/{author}/{name}/versions/{version}")
-    public ResponseEntity<ProjectDetailsDtoResponse> updateProjectVersions(
+    public ResponseEntity<ProjectDetailsDtoResponse> deleteProjectVersion(
             @PathVariable(name = "author") String author,
             @PathVariable(name = "name") String projectName,
             @PathVariable(name = "version") String versionName,
@@ -80,7 +80,7 @@ public class ProjectVersionController {
 
 
     @GetMapping("/{author}/{name}/versions/{version}")
-    public ResponseEntity<ProjectDetailsDtoResponse> updateProjectVersions(
+    public ResponseEntity<ProjectDetailsDtoResponse> getProjectVersion(
             @PathVariable(name = "author") String author,
             @PathVariable(name = "name") String projectName,
             @PathVariable(name = "version") String versionName
