@@ -3,6 +3,8 @@ package ru.stepagin.backend.service;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -56,22 +58,23 @@ public class ProjectService {
     }
 
     public ProjectVersionEntity getProject(
-            String author,
+            String authorName,
             String projectName,
             String version
     ) {
-        UserEntity user = userRepository.findByUsername(author);
-        if (user == null)
-            throw new ProjectNotFoundException(author, projectName);
+        String actor = getCurrentUsername();
+        UserEntity author = userRepository.findByUsername(authorName);
+        if (author == null)
+            throw new ProjectNotFoundException(authorName, projectName);
 
-        ProjectCardEntity projectCard = projectCardRepository.findByNameAndAuthor(author, projectName);
+        ProjectCardEntity projectCard = projectCardRepository.findByNameAndAuthor(authorName, projectName);
         if (projectCard == null) {
-            throw new ProjectNotFoundException(author, projectName);
+            throw new ProjectNotFoundException(authorName, projectName);
         }
 
         ProjectVersionEntity projectVersion;
         if (version != null) {
-            projectVersion = projectVersionRepository.findProjectByVersion(author, projectName, version);
+            projectVersion = projectVersionRepository.findProjectByVersion(authorName, projectName, version);
             if (projectVersion != null) {
                 return projectVersion;
             }
@@ -80,7 +83,7 @@ public class ProjectService {
         projectVersion = projectCard.getProjectVersions().stream()
                 .min(Comparator.comparing(ProjectVersionEntity::getDisplayOrder)
                         .thenComparing(ProjectVersionEntity::getCreatedOn))
-                .orElseThrow(() -> new ProjectNotFoundException(author, projectName));
+                .orElseThrow(() -> new ProjectNotFoundException(authorName, projectName));
 
         return projectVersion;
     }
@@ -241,5 +244,15 @@ public class ProjectService {
                 project.getProjectCard().getName(),
                 project.getVersionName()
         );
+    }
+
+    public String getCurrentUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else {
+            return principal.toString(); // Например, для строкового значения имени пользователя
+        }
     }
 }

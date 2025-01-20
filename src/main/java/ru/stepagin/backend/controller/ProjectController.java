@@ -24,7 +24,9 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<ProjectCardDtoResponse>> getProjects() { // todo: фильтрация и сортировка
+    public ResponseEntity<List<ProjectCardDtoResponse>> getProjects(
+            Principal principal
+    ) { // todo: фильтрация и сортировка
         List<ProjectCardEntity> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects.stream().map(ProjectMapper::toDto).toList());
     }
@@ -33,7 +35,8 @@ public class ProjectController {
     public ResponseEntity<ProjectDetailsDtoResponse> getProjectDetails(
             @PathVariable(name = "author") String author,
             @PathVariable(name = "name") String projectName,
-            @RequestParam(value = "version", required = false) String version
+            @RequestParam(value = "version", required = false) String version,
+            Principal principal
     ) { // todo: фильтрация и сортировка
         ProjectVersionEntity project = projectService.getProject(author, projectName, version);
         return ResponseEntity.ok(ProjectMapper.toDto(project));
