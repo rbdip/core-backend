@@ -3,28 +3,25 @@ package ru.stepagin.backend.service;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import ru.stepagin.backend.dto.CreateProjectDtoRequest;
-import ru.stepagin.backend.dto.CreateProjectVersionDtoRequest;
-import ru.stepagin.backend.dto.UpdateProjectDtoRequest;
-import ru.stepagin.backend.dto.UpdateProjectVersionDtoRequest;
+import ru.stepagin.backend.dto.*;
 import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.entity.UserEntity;
 import ru.stepagin.backend.exception.ProjectAlreadyExistsException;
 import ru.stepagin.backend.exception.ProjectNotFoundException;
 import ru.stepagin.backend.exception.UserNotFoundException;
+import ru.stepagin.backend.mapper.ProjectMapper;
 import ru.stepagin.backend.repository.ProjectCardRepository;
 import ru.stepagin.backend.repository.ProjectVersionRepository;
 import ru.stepagin.backend.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.List;
 
 @Slf4j
 @Validated
@@ -53,8 +50,25 @@ public class ProjectService {
         return project;
     }
 
-    public List<ProjectCardEntity> getAllProjects() {
-        return projectCardRepository.findAll();
+    public ProjectCardWrapperDtoResponse getAllProjects(
+            String query,
+            PageRequest pageRequest
+    ) {
+        if (query == null || query.isEmpty()) {
+            Page<ProjectCardEntity> page = projectCardRepository.findAll(pageRequest);
+            return new ProjectCardWrapperDtoResponse(
+                    page.getContent().stream().map(ProjectMapper::toDto).toList(),
+                    page.getTotalElements(),
+                    (long) page.getTotalPages()
+            );
+        }
+        Page<ProjectCardEntity> page = projectVersionRepository.findByQuery(query, pageRequest);
+
+        return new ProjectCardWrapperDtoResponse(
+                page.getContent().stream().map(ProjectMapper::toDto).toList(),
+                page.getTotalElements(),
+                (long) page.getTotalPages()
+        );
     }
 
     public ProjectVersionEntity getProject(
@@ -62,7 +76,6 @@ public class ProjectService {
             String projectName,
             String version
     ) {
-        String actor = getCurrentUsername();
         UserEntity author = userRepository.findByUsername(authorName);
         if (author == null)
             throw new ProjectNotFoundException(authorName, projectName);
@@ -246,13 +259,4 @@ public class ProjectService {
         );
     }
 
-    public String getCurrentUsername() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            return ((UserDetails) principal).getUsername();
-        } else {
-            return principal.toString(); // Например, для строкового значения имени пользователя
-        }
-    }
 }

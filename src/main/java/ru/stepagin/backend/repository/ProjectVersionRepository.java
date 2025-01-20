@@ -1,11 +1,14 @@
 package ru.stepagin.backend.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
 
 @Repository
@@ -45,5 +48,24 @@ public interface ProjectVersionRepository extends JpaRepository<ProjectVersionEn
             @Param("versionName") String versionName
     );
 
+    @Query("""
+            select distinct p.projectCard from ProjectVersionEntity p
+            where upper(p.projectCard.name) like upper(concat('%', :q, '%'))
+            or upper(p.projectCard.title) like upper(concat('%', :q, '%'))
+            or upper(p.description) like upper(concat('%', :q, '%'))"""
+    )
+    Page<ProjectCardEntity> findByQuery(
+            @Param("q") String query,
+            Pageable pageable
+    );
 
+    @Query("""
+            select count (distinct p.projectCard) from ProjectVersionEntity p
+            where upper(p.projectCard.name) like upper(concat('%', :q, '%'))
+            or upper(p.projectCard.title) like upper(concat('%', :q, '%'))
+            or upper(p.description) like upper(concat('%', :q, '%'))"""
+    )
+    long countByQuery(
+            @Param("q") String query
+    );
 }
