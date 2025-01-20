@@ -9,8 +9,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(
@@ -53,24 +51,6 @@ public class ProjectCardEntity {
     @Column(name = "deleted_on")
     private LocalDateTime deletedOn;
 
-    @OneToMany(mappedBy = "projectCard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProjectVersionEntity> projectVersions = new HashSet<>();
-
-    @OneToMany(mappedBy = "projectCard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<FavouriteProjectEntity> projectLikes = new HashSet<>();
-
-    public void addProjectVersion(ProjectVersionEntity projectVersion) {
-        if (projectVersions.contains(projectVersion) || projectVersion == null) {
-            return;
-        }
-        projectVersion.setProjectCard(this);
-        projectVersions.add(projectVersion);
-    }
-
-    public void removeProjectVersion(ProjectVersionEntity projectVersion) {
-        if (!projectVersions.contains(projectVersion) || projectVersion == null) {
-            return;
-        }
-        projectVersions.remove(projectVersion);
-    }
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String description;
 }

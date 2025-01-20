@@ -1,5 +1,7 @@
 package ru.stepagin.backend.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,6 +33,17 @@ public interface ProjectCardRepository extends JpaRepository<ProjectCardEntity, 
     @Query("update ProjectCardEntity p set p.isDeleted = true, p.deletedOn = CURRENT_TIMESTAMP, p.updatedOn = CURRENT_TIMESTAMP " +
             "where upper(p.author.username) = upper(:username)")
     void deleteAllByAuthor(String username);
+
+    @Query("""
+            select p from ProjectCardEntity p
+            where upper(p.name) like upper(concat('%', :q, '%'))
+            or upper(p.title) like upper(concat('%', :q, '%'))
+            or upper(p.description) like upper(concat('%', :q, '%'))"""
+    )
+    Page<ProjectCardEntity> findByQuery(
+            @Param("q") String query,
+            Pageable pageable
+    );
 
 
 }

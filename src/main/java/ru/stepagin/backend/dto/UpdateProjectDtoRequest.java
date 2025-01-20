@@ -21,8 +21,5 @@ public class UpdateProjectDtoRequest {
     @Pattern(regexp = "[a-zA-Z\\-_0-9]+")
     private String name;
 
-    @Pattern(regexp = "[a-zA-Z\\-_0-9.]+")
-    private String versionName;
-
     private String description;
 }

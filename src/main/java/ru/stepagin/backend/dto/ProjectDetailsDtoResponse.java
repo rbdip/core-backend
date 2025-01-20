@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,9 +21,4 @@ public class ProjectDetailsDtoResponse {
 
     private LocalDateTime updatedOn;
     private String description;
-    private String displayVersion;
-    private List<ProjectVersionDto> versions;
-
-    private Integer likeCount;
-    private Boolean liked;
 }

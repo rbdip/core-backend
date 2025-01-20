@@ -49,7 +49,4 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<ProjectCardEntity> projects = new HashSet<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<FavouriteProjectEntity> favouriteProjects = new HashSet<>();
 }

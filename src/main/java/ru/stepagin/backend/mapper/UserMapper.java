@@ -9,7 +9,7 @@ public class UserMapper {
         UserCardDtoResponse dto = new UserCardDtoResponse();
         dto.setCreatedOn(entity.getCreatedOn());
         dto.setUsername(entity.getUsername());
-        dto.setProjects(entity.getProjects().stream().map(ProjectMapper::toDto).toList());
+        dto.setProjects(entity.getProjects().stream().map(ProjectMapper::toCardDto).toList());
         dto.setDisplayName(entity.getDisplayName());
         return dto;
     }

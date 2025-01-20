@@ -18,7 +18,4 @@ public class ProjectCardDtoResponse {
     private String name;
     private AuthorDto author;
     private LocalDateTime createdOn;
-
-    private Integer likeCount;
-    private Boolean liked;
 }

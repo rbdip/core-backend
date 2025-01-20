@@ -9,7 +9,6 @@ import ru.stepagin.backend.dto.CreateProjectDtoRequest;
 import ru.stepagin.backend.dto.ProjectCardWrapperDtoResponse;
 import ru.stepagin.backend.dto.ProjectDetailsDtoResponse;
 import ru.stepagin.backend.dto.UpdateProjectDtoRequest;
-import ru.stepagin.backend.entity.ProjectVersionEntity;
 import ru.stepagin.backend.mapper.ProjectMapper;
 import ru.stepagin.backend.service.ProjectService;
 
@@ -34,11 +33,10 @@ public class ProjectController {
     @GetMapping("/{author}/{name}")
     public ResponseEntity<ProjectDetailsDtoResponse> getProjectDetails(
             @PathVariable(name = "author") String author,
-            @PathVariable(name = "name") String projectName,
-            @RequestParam(value = "version", required = false) String version
+            @PathVariable(name = "name") String projectName
     ) {
-        ProjectVersionEntity project = projectService.getProject(author, projectName, version);
-        return ResponseEntity.ok(ProjectMapper.toDto(project));
+        var project = projectService.getProject(author, projectName);
+        return ResponseEntity.ok(ProjectMapper.toDetailsDto(project));
     }
 
     @PostMapping
@@ -47,8 +45,8 @@ public class ProjectController {
             Principal principal
     ) {
         String username = principal.getName();
-        ProjectVersionEntity project = projectService.createProject(request, username);
-        return ResponseEntity.ok(ProjectMapper.toDto(project));
+        var project = projectService.createProject(request, username);
+        return ResponseEntity.ok(ProjectMapper.toDetailsDto(project));
     }
 
     @DeleteMapping("/{author}/{name}")
@@ -70,14 +68,13 @@ public class ProjectController {
             @RequestBody UpdateProjectDtoRequest request,
             @PathVariable(name = "author") String author,
             @PathVariable(name = "name") String projectName,
-            @RequestParam(name = "version", required = false) String version,
             Principal principal
     ) {
         String username = principal.getName();
         if (!author.equals(username)) {
             throw new IllegalArgumentException("Can update only your own projects");
         }
-        ProjectVersionEntity updated = projectService.updateProjectData(request, author, projectName, version);
-        return ResponseEntity.ok(ProjectMapper.toDto(updated));
+        var updated = projectService.updateProjectData(request, author, projectName);
+        return ResponseEntity.ok(ProjectMapper.toDetailsDto(updated));
     }
 }
