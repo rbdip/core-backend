@@ -1,15 +1,11 @@
 package ru.stepagin.backend.mapper;
 
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import ru.stepagin.backend.dto.AuthorDto;
 import ru.stepagin.backend.dto.ProjectCardDtoResponse;
 import ru.stepagin.backend.dto.ProjectDetailsDtoResponse;
 import ru.stepagin.backend.dto.ProjectVersionDto;
-import ru.stepagin.backend.entity.FavouriteProjectEntity;
 import ru.stepagin.backend.entity.ProjectCardEntity;
 import ru.stepagin.backend.entity.ProjectVersionEntity;
-import ru.stepagin.backend.entity.UserEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -32,9 +28,6 @@ public class ProjectMapper {
             dto.setAuthor(authorDto);
         }
         dto.setCreatedOn(entity.getCreatedOn() != null ? entity.getCreatedOn() : null);
-
-        dto.setLikeCount(getLikeCount(entity));
-        dto.setLiked(getIsLiked(entity));
 
         return dto;
     }
@@ -63,16 +56,7 @@ public class ProjectMapper {
         }
         dto.setDescription(entity.getDescription());
 
-        dto.setLikeCount(getLikeCount(entity.getProjectCard()));
-        dto.setLiked(getIsLiked(entity.getProjectCard()));
-
         return dto;
-    }
-
-    private static ProjectVersionEntity firstDisplayName(Set<ProjectVersionEntity> versions) {
-        return versions.stream()
-                .findFirst()
-                .orElse(null);
     }
 
     public static List<ProjectVersionDto> toProjectVersionDtos(Set<ProjectVersionEntity> versions) {
@@ -85,25 +69,5 @@ public class ProjectMapper {
                         )
                 )
                 .collect(Collectors.toList());
-    }
-
-    private static int getLikeCount(ProjectCardEntity card) {
-        return card.getProjectLikes().size();
-    }
-
-    private static boolean getIsLiked(ProjectCardEntity card) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String actorName;
-        if (principal instanceof UserDetails) {
-            actorName = ((UserDetails) principal).getUsername();
-        } else {
-            return false;
-        }
-
-        return card.getProjectLikes().stream()
-                .map(FavouriteProjectEntity::getUser)
-                .map(UserEntity::getUsername)
-                .anyMatch(username -> username.equals(actorName));
-
     }
 }

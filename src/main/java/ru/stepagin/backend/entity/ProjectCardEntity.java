@@ -56,9 +56,6 @@ public class ProjectCardEntity {
     @OneToMany(mappedBy = "projectCard", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjectVersionEntity> projectVersions = new HashSet<>();
 
-    @OneToMany(mappedBy = "projectCard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<FavouriteProjectEntity> projectLikes = new HashSet<>();
-
     public void addProjectVersion(ProjectVersionEntity projectVersion) {
         if (projectVersions.contains(projectVersion) || projectVersion == null) {
             return;
