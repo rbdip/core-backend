@@ -18,12 +18,12 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("${app.path.start-prefix}/projects")
+@RequestMapping("${app.path.start-prefix}/projects/{author}/{name}/versions")
 @RequiredArgsConstructor
 public class ProjectVersionController {
     private final ProjectService projectService;
 
-    @GetMapping("/{author}/{name}/versions")
+    @GetMapping
     public ResponseEntity<List<ProjectVersionDto>> getProjectVersions(
             @PathVariable(name = "author") String author,
             @PathVariable(name = "name") String projectName
@@ -32,7 +32,7 @@ public class ProjectVersionController {
         return ResponseEntity.ok(ProjectMapper.toProjectVersionDtos(project.getProjectCard().getProjectVersions()));
     }
 
-    @PostMapping("/{author}/{name}/versions")
+    @PostMapping
     public ResponseEntity<ProjectDetailsDtoResponse> createProjectVersion(
             @RequestBody CreateProjectVersionDtoRequest request,
             @PathVariable(name = "author") String author,
@@ -47,7 +47,7 @@ public class ProjectVersionController {
         return ResponseEntity.ok(ProjectMapper.toDto(project));
     }
 
-    @PatchMapping("/{author}/{name}/versions/{version}")
+    @PatchMapping("/{version}")
     public ResponseEntity<ProjectDetailsDtoResponse> updateProjectVersion(
             @RequestBody UpdateProjectVersionDtoRequest request,
             @PathVariable(name = "author") String author,
@@ -63,7 +63,7 @@ public class ProjectVersionController {
         return ResponseEntity.ok(ProjectMapper.toDto(project));
     }
 
-    @DeleteMapping("/{author}/{name}/versions/{version}")
+    @DeleteMapping("/{version}")
     public ResponseEntity<ProjectDetailsDtoResponse> deleteProjectVersion(
             @PathVariable(name = "author") String author,
             @PathVariable(name = "name") String projectName,
@@ -79,7 +79,7 @@ public class ProjectVersionController {
     }
 
 
-    @GetMapping("/{author}/{name}/versions/{version}")
+    @GetMapping("/{version}")
     public ResponseEntity<ProjectDetailsDtoResponse> getProjectVersion(
             @PathVariable(name = "author") String author,
             @PathVariable(name = "name") String projectName,
