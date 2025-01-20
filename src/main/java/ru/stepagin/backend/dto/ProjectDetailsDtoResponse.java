@@ -24,4 +24,7 @@ public class ProjectDetailsDtoResponse {
     private String description;
     private String displayVersion;
     private List<ProjectVersionDto> versions;
+
+    private Integer likeCount;
+    private Boolean liked;
 }
